@@ -1,0 +1,13 @@
+#### Deeplink 被js和native同时监听并正确处理
+
+看标题觉得不明觉厉，因为RN的js部分都在一个MainActivity，其他native页面时另外的activity；而一个Deeplink在一个app中被两个Activity监听到，并且可以各自处理，这基本是不可能的事情。因为在浏览器打开一个 deeplink 的app时如果有2个Activity注册了去监听，那么会让你去选择一个来打开这个deeplink，被选的那个会被唤醒去处理link。
+
+所以要做到这一点，需要一个中间层的actvity去监听deeplink，然后根据在后台时时那个Activity进行跳转。当然，没有在后台的话，就更加情况看最后需要显示的页面是js的还是native的来进行跳转。大概思路很简单，但实际实现会遇到很多问题。
+
+#### react navigation 的 deeplink不能处理这种复杂的情况
+
+react navigation 可以监听到MainActivity的deeplink，并且可以根据uriPredix来提取所需的link信息；但是它只适用与纯RN项目。所以直接放弃react navigation对deeeplink的处理
+
+####怎么在显示完deeplink页面后，返回到正确的页面
+
+首先，假设这个App的Launch Activity是RN的MainActivity。在显示js页面的时候处理deeplink是没有问题的。但是
